@@ -1,0 +1,205 @@
+{% assign configurableFinish = product.metafields.nProduct.configurableProduct.value.finishes %}
+{% assign useCylindo = product.metafields.neptune.use_cylindo %}
+{% assign hiddenOptionCss = "display:none!important" %}
+
+{% if useCylindo %}
+<link rel="stylesheet" type="text/css" href="https://viewer.cylindo.com/v4/viewer.min.css">
+<script src="https://viewer.cylindo.com/v4/viewer.min.js"></script>
+{% endif %}
+
+<div class="configurable-product-overlay config-toggle">
+  <div class="configurable-product-overlay__inner"></div>
+</div>
+
+<div id="config-flyout" class="drawer config-flyout" data-config-drawer>
+  <div class="config-flyout__header">
+    <a href="#" class="config-toggle" data-config-close>
+      {% render 'icon-close' %}
+    </a>
+  </div>
+
+  <div class="product-config-template">
+
+    <div id="configurable-product" data-use-cylindo="{{ useCylindo }}">
+
+      <div id="cylindo-viewer"></div>
+
+      <div class="accordion-tabs">
+        {% for finish in configurableFinish %}
+        {% assign accordion-classes = "" %}
+        {% if forloop.index == 1 %}
+        {% assign accordion-classes = accordion-classes | append: 'accordion-active ' %}
+        {% endif %}
+        <button class="accordion-tab {{accordion-classes}} type-heading-3" data-actab-group="config"
+          data-actab-id="config{{ forloop.index }}">{{ finish.name }}</button>
+        {% endfor %}
+      </div>
+
+      <div class="accordion-content">
+
+        {% for finish in configurableFinish %}
+
+        {% assign accordion-classes = "" %}
+
+        {% if forloop.index == 1 %}
+        {% assign accordion-classes = accordion-classes | append: 'accordion-active ' %}
+        {% endif %}
+
+        <article class="accordion-item {{accordion-classes}}" data-actab-group="config"
+          data-actab-id="config{{forloop.index}}" data-finish-id="{{ finish.id }}">
+          <h4 class="accordion-item__label type-heading-3">{{finish.name}}</h4>
+
+          {% for finishGroup in finish.finishGroups %}
+          <div>
+            <h5 class="type-heading-4 bordered tr">{{finishGroup.name}}</h5>
+            <div class="finish-items__wrapper">
+              {% for finishColor in finishGroup.finishColors %}
+              <!-- If finish equals any standard finish colors -->
+              <div class="finish-item" data-standard="{{ finishColor.std }}"" data-selected=" {{ finishColor.default}}"
+                data-finish-id="{{ finish.id }}" data-finish-value="{{ finishColor.id }}" data-finish-name="{{ finishColor.name }}" style="cursor:pointer">
+                <span class="finish-item-thumb"></span>
+                <div class="finish-item-name type-body-small tc fw5">{{ finishColor.name }}</div>
+                <div class="finish-item-price type-body-small tc">{{ product.price | money_without_trailing_zeros }}</div>
+                <div class="finish-item-availability type-body-small tc fsi">{{ finishColor.availability }}</div>
+                <div>
+                  <!-- {% if finishColor.std %} Standard {% endif %} |
+                  {% if finishColor.default %} Default | {{ product.price | money }} {% endif %} -->
+                </div>
+              </div>
+              {% endfor %}
+              </ul>
+            </div>
+            {% endfor %}
+        </article>
+
+        {% endfor %}
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", function () {
+
+    var useCylindo = document.getElementById("configurable-product").getAttribute("data-use-cylindo");
+
+    function setSelected() {
+      
+      //clear options for finish type id
+      var selectedOptions = document.querySelectorAll('[data-finish-id=' + this.getAttribute('data-finish-id') + ']');
+      
+      //clear options
+      // var selectedOptions = document.querySelectorAll('[data-selected="true"]');
+      
+      selectedOptions.forEach(function (option) {
+        option.removeAttribute("data-selected");
+      });
+      //make selection
+      this.setAttribute("data-selected", "true");
+
+      // set line option
+      var lineOption = document.getElementById(this.getAttribute("data-finish-id"));
+      var isStandard = this.getAttribute("data-standard");
+      var defaultFinish = "";
+      if (isStandard) {
+        defaultFinish = " | (standard}";
+      }
+      
+      lineOption.value = this.getAttribute("data-finish-value") + ' | ' + this.getAttribute('data-finish-name')  + defaultFinish;
+
+      // update cylindo if it exists
+      if (useCylindo) {
+        var features = featuresArray();
+        viewerInstance.setFeatures(features);
+      }
+
+      //set priced variant
+      //If painted item then need to understand how many finishes are non std and select correspoinding variant
+      
+      //If product has an option called 'Paint Service'
+      var paintServiceOption = document.getElementsByName('options[Paint Service]')[0];
+      if (paintServiceOption != undefined) {
+        //if P1 exists and value is not null then set option to 'Exterior'
+        var p1 = document.getElementById("P1");
+        var p2 = document.getElementById("P2");
+
+        paintServiceOption.value = "0 Paint Service"
+
+        if (p1 != undefined) {
+          if (p1.value.toLowerCase().indexOf("standard") == -1 && p1.value != "") {
+            paintServiceOption.value = "1 Paint Service";
+          }
+        }
+        if (p2 != undefined) {
+          if (p2.value.toLowerCase().indexOf("standard") == -1 && p2.value != "") {
+            paintServiceOption.value = "1 Paint Service";
+          }
+        }
+        if (p2 != undefined && p1 != undefined) {
+          if ((p2.value != "" && p2.value.toLowerCase().indexOf("standard") == -1) && (p1.value != "" && p1.value.toLowerCase().indexOf("standard") == -1)) {
+            paintServiceOption.value = "2 Paint Service";
+          }
+        }
+        //if P2 exists amd value is not null then set option to 'Interior'
+
+        //if P1 & P2 exist and both have values then set option to 'Exterior & Interior'
+
+        //else set option to 'Std'
+        paintServiceOption.dispatchEvent(new Event('change'));
+        }
+
+      //If product has an option called 'Fabric'
+
+
+
+
+      //If fabric then which fabric price group is a fabric in and select corresponding variant
+
+      //Update?
+    }
+
+    const configurableSelectors = document.getElementsByClassName("finish-item");
+    configurableSelectors.forEach(function (selection) {
+      selection.addEventListener("click", setSelected);
+    });
+
+    // selected configuration in interface
+    
+    if (useCylindo) {
+      // the opts object should hold the start properties of the 360 HD Viewer
+      var opts = {
+        'accountID': 4972,
+        'productCode': document.getElementById('current-article-id').getAttribute("data-article-id"),
+        'thumbs': false,
+        'features': featuresArray(),
+        'containerID': '#cylindo-viewer',
+      };
+      // make sure the cylindo framework has been "installed"
+      if (cylindo) {
+        // do not instantiate the viewer until the framework reports ready.
+        cylindo.on('ready', function () {
+          // create the instance
+          viewerInstance = cylindo.viewer.create(opts);
+        });
+      }
+    }
+
+function featuresArray() {
+  var features = [];
+  const elements = document.querySelectorAll('[data-selected="true"]');
+
+  elements.forEach(function (el, index) {
+    features.push(el.getAttribute("data-finish-id"));
+    features.push(el.getAttribute("data-finish-value"));
+  });
+  return features;
+}
+
+  });
+
+  var viewerInstance = null;
+
+</script>

@@ -1,9 +1,7 @@
-<!-- /snippets/comment.liquid -->
-<div class="comment__content rte">
+<div class="comment__content">
   {{ comment.content }}
 </div>
 <div class="comment__meta">
-  {% capture author %}<strong>{{ comment.author }}</strong>{% endcapture %}
-  {% capture date %}<strong><time datetime="{{ comment.created_at | date: '%Y-%m-%dT%H:%M:%SZ' }}">{{ comment.created_at | date: format: 'date' }}</time></strong>{% endcapture %}
-  {{ 'blogs.article.comment_meta_html' | t: author: author, date: date }}
+  <span class="comment__meta-item">{{ comment.author }}</span>
+  <span class="comment__meta-item">{{ comment.created_at | time_tag: format: 'date' }}</span>
 </div>

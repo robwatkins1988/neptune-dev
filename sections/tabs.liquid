@@ -1,0 +1,124 @@
+{% assign designNotes = product.metafields.custom.design_notes %}
+{% assign technicalDetails = product.selected_or_first_available_variant.metafields.custom.technical_information %}
+{% assign care = product.metafields.custom.care_need_to_knows %}
+{% assign deliveryReturns = product.metafields.custom.delivery_returns %}
+
+  <section class="section flex">
+    <div class="accordion__container">
+    <section class="accordion-tabs">
+      {% if designNotes != blank %}
+        <button class="accordion-tab accordion-active type-heading-3" data-actab-group="0" data-actab-id="0">Design notes</button>
+      {% endif %}
+      {% if technicalDetails != blank %}
+        <button class="accordion-tab type-heading-3" data-actab-group="0" data-actab-id="1">Technical details</button>
+      {% endif %}
+      {% if care != blank %}
+        <button class="accordion-tab type-heading-3" data-actab-group="0" data-actab-id="2">Care</button>
+      {% endif %}
+      {% if deliveryReturns != blank %}
+        <button class="accordion-tab type-heading-3" data-actab-group="0" data-actab-id="3">Delivery & returns</button>
+      {% endif %}
+    </section>
+    <section class="accordion-content">
+      {% if designNotes != blank %}
+        <article class="accordion-item accordion-active" data-actab-group="0" data-actab-id="0">
+          <h4 class="accordion-item__label type-heading-3">Design notes</h4>
+          <div class="accordion-item__container">
+            {{ designNotes}}
+          </div>
+        </article>
+      {% endif %}
+      {% if technicalDetails != blank %}
+        <article class="accordion-item" data-actab-group="0" data-actab-id="1">
+          <h4 class="accordion-item__label type-heading-3">Technical details</h4>
+          <div class="accordion-item__container">
+            <p>{{ technicalDetails | newline_to_br }}</p>
+          </div>
+        </article>
+      {% endif %}
+      {% if care != blank %}
+        <article class="accordion-item" data-actab-group="0" data-actab-id="2">
+          <h4 class="accordion-item__label type-heading-3">Care</h4>
+          <div class="accordion-item__container">
+            <p>{{ care | newline_to_br}}</p>
+          </div>
+        </article>
+      {% endif %}
+      {% if deliveryReturns != blank %}
+        <article class="accordion-item" data-actab-group="0" data-actab-id="3">
+          <h4 class="accordion-item__label type-heading-3">Delivery & returns</h4>
+          <div class="accordion-item__container">
+            {{ deliveryReturns }}
+          </div>
+        </article>
+      {% endif %}
+    </section>
+    </div>
+  </section>
+
+{% schema %}
+  {
+    "name": "Product Tab Panel",
+    "class": "section-dynamic section-borderable",
+    "settings": [],
+    "presets": [
+      {
+        "name": "Accordion Tabs",
+        "category": "Neptune"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+
+document.addEventListener("DOMContentLoaded", function() {
+
+  const labels = document.querySelectorAll(".accordion-item__label");
+  const tabs = document.querySelectorAll(".accordion-tab");
+
+  function toggleShow() {
+    const target = this;
+    const item = target.classList.contains("accordion-tab")
+      ? target
+      : target.parentElement;
+    const group = item.dataset.actabGroup;
+    const id = item.dataset.actabId;
+
+    tabs.forEach(function (tab) {
+      if (tab.dataset.actabGroup === group) {
+        if (tab.dataset.actabId === id) {
+          tab.classList.add("accordion-active");
+        } else {
+          tab.classList.remove("accordion-active");
+        }
+      }
+    });
+
+    labels.forEach(function (label) {
+      const tabItem = label.parentElement;
+
+      if (tabItem.dataset.actabGroup === group) {
+        if (tabItem.dataset.actabId === id) {
+          tabItem.classList.add("accordion-active");
+        } else {
+          tabItem.classList.remove("accordion-active");
+        }
+      }
+    });
+  }
+
+  labels.forEach(function (label) {
+    label.addEventListener("click", toggleShow);
+  });
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener("click", toggleShow);
+  });
+
+});
+
+{% endjavascript %}

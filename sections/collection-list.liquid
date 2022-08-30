@@ -1,269 +1,230 @@
-<div class="collection-list collection-list--{{ section.id }}" data-section-id="{{ section.id }}">
+{% liquid
+  assign id = section.id
 
-  {% if section.settings.title != blank %}
-    <h2 class="small--text-center">{{ section.settings.title | escape }}</h2>
-  {% endif %}
+  assign section_style = section.settings.section_style
+  assign text_position = section.settings.text_position
 
-  {% case section.settings.grid %}
-    {% when 2 %}
-      {%- assign grid_item_width = 'medium-up--one-half' -%}
-    {% when 3 %}
-      {%- assign grid_item_width = 'small--one-half medium-up--one-third' -%}
-    {% when 4 %}
-      {%- assign grid_item_width = 'small--one-half medium-up--one-quarter' -%}
-    {% when 5 %}
-      {%- assign grid_item_width = 'small--one-half medium-up--one-fifth' -%}
+  assign columns = section.settings.columns
+  assign aspect_ratio = section.settings.aspect_ratio
+  assign overline = section.settings.overline
+  assign heading = section.settings.title
+  assign subheading = section.settings.subheading
+  assign text_max_width = section.settings.text_max_width
+  assign blocks = section.blocks
+%}
+
+{% assign modifiers = '' %}
+
+{% assign modifiers = modifiers | append: ' section--' | append: section_style %}
+
+{% unless section_style == 'contrast' %}
+  {% assign modifiers = modifiers | append: ' section--bordered' %}
+{% endunless %}
+
+{% assign modifiers = modifiers | append: ' carousel--columns-' | append: columns %}
+
+{% assign carousel_text_position = text_position | split: '_' | first %}
+{% assign carousel_text_alignment = text_position | split: '_' | last %}
+
+{% assign modifiers = modifiers | append: ' carousel--text-position-' | append: carousel_text_position %}
+{% assign modifiers = modifiers | append: ' carousel--text-alignment-' | append: carousel_text_alignment %}
+{% assign modifiers = modifiers | append: ' carousel--items-' | append: blocks.size %}
+{% assign modifiers = modifiers | append: ' carousel--aspect-ratio-' | append: aspect_ratio %}
+
+{% assign minimum_items_for_wrap_around = columns | plus: 2 %}
+{% assign items_needed = minimum_items_for_wrap_around | minus: blocks.size %}
+
+{% if carousel_text_position == 'top' and items_needed <= 0 or blocks.size == 0 %}
+  {% assign modifiers = modifiers | append: ' carousel--columns-wrap-around' %}
+{% endif %}
+
+{% assign image_is_constrained = true %}
+
+{% if aspect_ratio == 'natural' %}
+  {% assign image_is_constrained = false %}
+{% endif %}
+
+<section
+  data-section-id="{{ id }}"
+  data-section-type="collection-list"
+  class="section collection-list carousel{{ modifiers }}"
+  data-text-position={{ carousel_text_position }}
+  data-text-alignment={{ carousel_text_alignment }}
+>
+  {% render 'text-block' with
+    id: id,
+    modifiers: 'mb5 animation__staggered-children-fade-in',
+    heading_alignment: carousel_text_alignment,
+    overline: overline,
+    heading: heading,
+    subheading: subheading,
+    text_max_width: text_max_width,
+  %}
+
+  {% render 'carousel-navigation' %}
+
+  <div class="collection-list__slides carousel__slides" data-carousel>
+    {% if blocks.size > 0 %}
+      {% for block in blocks %}
+        {% assign featured_collection = collections[block.settings.collection] %}
+        {% if featured_collection != empty %}
+          <a href="{{ featured_collection.url }}" class="collection-list__slide carousel__slide animates" {{ block.shopify_attributes }} data-index="{{ forloop.index0 }}">
+
+            {%- assign image_object = featured_collection.image | default: featured_collection.products.first.featured_media.preview_image -%}
+
+            {% unless image_object == blank %}
+              <div class="collection-list__image carousel__slide-image">
+                {% render 'image' with
+                  image: image_object,
+                  disable_style: image_is_constrained
+                %}
+              </div>
+            {% endunless %}
+
+            <h2 class="collection-list__title type-body-regular mt3 mb0">{{ featured_collection.title }}</h2>
+            <div class="collection-list__product-count meta">{{ featured_collection.products_count }} {{ featured_collection.products_count | pluralize: 'sections.featured_collections.count_text_singular', 'sections.featured_collections.count_text' | t }}</div>
+          </a>
+        {% else %}
+          {% capture current %}{% cycle 1, 2, 3, 4 %}{% endcapture %}
+          {% capture product_count %}{% cycle 9, 18, 6, 21 %}{% endcapture %}
+
+          <div class="collection-list__slide carousel__slide animates">
+            <div class="collection-list__collection-placeholder carousel__slide-image">
+              {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+            <h2 class="collection-list__title type-body-regular mt3 mb0">{{ 'homepage.onboarding.collection_title' | t }}</h2>
+            <div class="collection-list__product-count meta">{{ product_count }} {{ 'sections.featured_collections.count_text' | t }}</div>
+          </div>
+        {% endif %}
+      {% endfor %}
     {% else %}
-      {%- assign grid_item_width = 'small--one-half medium-up--one-third' -%}
-  {% endcase %}
+      {% for i in (1..minimum_items_for_wrap_around) %}
+        {% capture current %}{% cycle 1, 2, 3, 4 %}{% endcapture %}
+        {% capture product_count %}{% cycle 9, 18, 6, 21 %}{% endcapture %}
 
-  <div class="collection-grid">
-    <div class="grid grid--uniform">
-      {% for block in section.blocks limit: section.blocks.size %}
-        <div class="grid__item {{ grid_item_width }} slide-up-animation animated" {{ block.shopify_attributes }} role="listitem">
-          {%- assign collection = collections[block.settings.collection] -%}
-          {% include 'collection-grid-item' %}
+        <div class="collection-list__slide carousel__slide animates">
+          <div class="collection-list__collection-placeholder carousel__slide-image">
+            {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+          <h2 class="collection-list__title type-body-regular mt3 mb0">{{ 'homepage.onboarding.collection_title' | t }}</h2>
+          <div class="collection-list__product-count meta">{{ product_count }} {{ 'sections.featured_collections.count_text' | t }}</div>
         </div>
       {% endfor %}
-    </div>
+    {% endif %}
   </div>
+</section>
 
-  {% if section.blocks.size == 0 %}
-    <div class="rte">
-      {{ 'homepage.onboarding.no_content' | t }}
-    </div>
-  {% endif %}
-
-</div>
 
 
 {% schema %}
-{
-  "name": {
-    "cs": "Seznam kolekcí",
-    "da": "Kollektionsliste",
-    "de": "Kategorieliste",
-    "en": "Collection list",
-    "es": "Lista de colecciones",
-    "fi": "Kokoelmaluettelo",
-    "fr": "Page des collections",
-    "it": "Elenco delle collezioni",
-    "ja": "コレクションリスト",
-    "ko": "컬렉션 목록",
-    "nb": "Samlingsliste",
-    "nl": "Collectielijst",
-    "pl": "Lista kolekcji",
-    "pt-BR": "Lista de coleções",
-    "pt-PT": "Lista de coleções",
-    "sv": "Kollektionslista",
-    "th": "รายการคอลเลกชัน",
-    "tr": "Koleksiyon listesi",
-    "vi": "Danh sách bộ sưu tập",
-    "zh-CN": "产品系列列表",
-    "zh-TW": "商品系列清單"
-  },
-  "class": "index-section",
-  "max_blocks": 12,
-  "settings": [
-    {
-      "type": "text",
-      "id": "title",
-      "label": {
-        "cs": "Nadpis",
-        "da": "Overskrift",
-        "de": "Titel",
-        "en": "Heading",
-        "es": "Título",
-        "fi": "Otsake",
-        "fr": "Titre",
-        "it": "Heading",
-        "ja": "見出し",
-        "ko": "제목",
-        "nb": "Overskrift",
-        "nl": "Kop",
-        "pl": "Nagłówek",
-        "pt-BR": "Título",
-        "pt-PT": "Título",
-        "sv": "Rubrik",
-        "th": "ส่วนหัว",
-        "tr": "Başlık",
-        "vi": "Tiêu đề",
-        "zh-CN": "标题",
-        "zh-TW": "標題"
+  {
+    "name": "t:sections.collection_list.name",
+    "class": "section-dynamic section-borderable",
+    "templates": ["404", "article", "blog", "cart", "collection", "list-collections", "customers/account", "customers/activate_account", "customers/addresses", "customers/login", "customers/order", "customers/register", "customers/reset_password", "gift_card", "index", "page", "product", "search"],
+    "settings": [
+      {
+        "type": "header",
+        "content": "t:sections.collection_list.settings.style_header.content"
       },
-      "default": {
-        "cs": "Seznam kolekcí",
-        "da": "Kollektionsliste",
-        "de": "Kategorieliste",
-        "en": "Collection list",
-        "es": "Lista de colecciones",
-        "fi": "Kokoelmaluettelo",
-        "fr": "Page de liste des collections",
-        "it": "Elenco delle collezioni",
-        "ja": "コレクションリスト",
-        "ko": "컬렉션 목록",
-        "nb": "Samlingsliste",
-        "nl": "Collectielijst",
-        "pl": "Lista kolekcji",
-        "pt-BR": "Lista de coleções",
-        "pt-PT": "Lista de coleções",
-        "sv": "Kollektionslista",
-        "th": "รายการคอลเลกชัน",
-        "tr": "Koleksiyon listesi",
-        "vi": "Danh sách bộ sưu tập",
-        "zh-CN": "产品系列列表",
-        "zh-TW": "商品系列清單"
-      }
-    },
-    {
-      "type": "range",
-      "id": "grid",
-      "label": {
-        "cs": "Počet kolekcí na řádek",
-        "da": "Kollektioner pr. række",
-        "de": "Kategorien per Reihe",
-        "en": "Collections per row",
-        "es": "Colecciones por fila",
-        "fi": "Kokoelmia per rivi",
-        "fr": "Collections par rangée",
-        "it": "Collezioni per riga",
-        "ja": "行あたりのコレクション数",
-        "ko": "열 별 컬렉션",
-        "nb": "Samlinger per rad",
-        "nl": "Collecties per rij",
-        "pl": "Liczba kolekcji na wiersz",
-        "pt-BR": "Coleções por linha",
-        "pt-PT": "Coleções por linha",
-        "sv": "Produktserier per rad",
-        "th": "คอลเลกชันต่อแถว",
-        "tr": "Satır başına koleksiyon",
-        "vi": "Số bộ sưu tập trên mỗi hàng",
-        "zh-CN": "每行产品系列数",
-        "zh-TW": "每列商品系列數"
-      },
-      "min": 2,
-      "max": 5,
-      "step": 1,
-      "default": 3
-    }
-  ],
-  "blocks": [
-    {
-      "type": "collection",
-      "name": {
-        "cs": "Kolekce",
-        "da": "Kollektion",
-        "de": "Kategorie",
-        "en": "Collection",
-        "es": "Colección",
-        "fi": "Kokoelma",
-        "fr": "Collection",
-        "it": "Collezione",
-        "ja": "コレクション",
-        "ko": "컬렉션",
-        "nb": "Samling",
-        "nl": "Collectie",
-        "pl": "Kolekcja",
-        "pt-BR": "Coleção",
-        "pt-PT": "Coleção",
-        "sv": "Produktserie",
-        "th": "คอลเลกชัน",
-        "tr": "Koleksiyon",
-        "vi": "Bộ sưu tập",
-        "zh-CN": "收藏",
-        "zh-TW": "商品系列"
-      },
-      "settings": [
-        {
-          "type": "collection",
-          "id": "collection",
-          "label": {
-            "cs": "Kolekce",
-            "da": "Kollektion",
-            "de": "Kategorie",
-            "en": "Collection",
-            "es": "Colección",
-            "fi": "Kokoelma",
-            "fr": "Collection",
-            "it": "Collezione",
-            "ja": "コレクション",
-            "ko": "컬렉션",
-            "nb": "Samling",
-            "nl": "Collectie",
-            "pl": "Kolekcja",
-            "pt-BR": "Coleção",
-            "pt-PT": "Coleção",
-            "sv": "Produktserie",
-            "th": "คอลเลกชัน",
-            "tr": "Koleksiyon",
-            "vi": "Bộ sưu tập",
-            "zh-CN": "收藏",
-            "zh-TW": "商品系列"
+      {
+        "type": "select",
+        "id": "section_style",
+        "label": "t:sections.collection_list.settings.section_style.label",
+        "default": "default",
+        "options": [
+          {
+            "value": "default",
+            "label": "t:sections.collection_list.settings.section_style.option_1"
+          },
+          {
+            "value": "contrast",
+            "label": "t:sections.collection_list.settings.section_style.option_2"
           }
-        }
-      ]
-    }
-  ],
-  "presets": [
-    {
-      "name": {
-        "cs": "Seznam kolekcí",
-        "da": "Kollektionsliste",
-        "de": "Kategorieliste",
-        "en": "Collection list",
-        "es": "Lista de colecciones",
-        "fi": "Kokoelmaluettelo",
-        "fr": "Page des collections",
-        "it": "Elenco delle collezioni",
-        "ja": "コレクションリスト",
-        "ko": "컬렉션 목록",
-        "nb": "Samlingsliste",
-        "nl": "Collectielijst",
-        "pl": "Lista kolekcji",
-        "pt-BR": "Lista de coleções",
-        "pt-PT": "Lista de coleções",
-        "sv": "Kollektionslista",
-        "th": "รายการคอลเลกชัน",
-        "tr": "Koleksiyon listesi",
-        "vi": "Danh sách bộ sưu tập",
-        "zh-CN": "产品系列列表",
-        "zh-TW": "商品系列清單"
+        ]
       },
-      "category": {
-        "cs": "Kolekce",
-        "da": "Kollektion",
-        "de": "Kategorie",
-        "en": "Collection",
-        "es": "Colección",
-        "fi": "Kokoelma",
-        "fr": "Collection",
-        "it": "Collezione",
-        "ja": "コレクション",
-        "ko": "컬렉션",
-        "nb": "Samling",
-        "nl": "Collectie",
-        "pl": "Kolekcja",
-        "pt-BR": "Coleção",
-        "pt-PT": "Coleção",
-        "sv": "Produktserie",
-        "th": "คอลเลกชัน",
-        "tr": "Koleksiyon",
-        "vi": "Bộ sưu tập",
-        "zh-CN": "收藏",
-        "zh-TW": "商品系列"
+      {
+        "type": "select",
+        "id": "text_position",
+        "label": "t:sections.collection_list.settings.text_position.label",
+        "options": [
+          { "value": "top_left", "label": "t:sections.collection_list.settings.text_position.option_1" },
+          { "value": "top_center", "label": "t:sections.collection_list.settings.text_position.option_2" },
+          { "value": "top_right", "label": "t:sections.collection_list.settings.text_position.option_3" },
+          { "value": "middle_left", "label": "t:sections.collection_list.settings.text_position.option_4" },
+          { "value": "middle_right", "label": "t:sections.collection_list.settings.text_position.option_5" }
+        ],
+        "default": "top_center"
       },
-      "blocks": [
-        {
-          "type": "collection"
-        },
-        {
-          "type": "collection"
-        },
-        {
-          "type": "collection"
-        }
-      ]
-    }
-  ]
-}
+      {
+        "type": "header",
+        "content": "t:sections.collection_list.settings.content_header.content"
+      },
+      {
+        "type": "range",
+        "id": "columns",
+        "label": "t:sections.collection_list.settings.columns.label",
+        "min": 2,
+        "max": 4,
+        "step": 1,
+        "default": 3
+      },
+      {
+        "id": "aspect_ratio",
+        "type": "select",
+        "label": "t:sections.collection_list.settings.aspect_ratio.label",
+        "options": [
+          { "label": "t:sections.collection_list.settings.aspect_ratio.option_1", "value": "natural" },
+          { "label": "t:sections.collection_list.settings.aspect_ratio.option_2", "value": "square" },
+          { "label": "t:sections.collection_list.settings.aspect_ratio.option_3", "value": "landscape" },
+          { "label": "t:sections.collection_list.settings.aspect_ratio.option_4", "value": "portrait" }
+        ],
+        "default": "natural"
+      },
+      {
+        "type": "text",
+        "id": "overline",
+        "label": "t:sections.collection_list.settings.overline.label",
+        "default": "Collections"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "t:sections.collection_list.settings.title.label",
+        "default": "Collection list"
+      },
+      {
+        "type": "richtext",
+        "id": "subheading",
+        "label": "t:sections.collection_list.settings.subheading.label",
+        "default": "<p>Use this section to showcase your many collections.</p>"
+      },
+      {
+        "type": "range",
+        "id": "text_max_width",
+        "label": "t:sections.collection_list.settings.text_max_width.label",
+        "min": 16,
+        "max": 50,
+        "step": 1,
+        "default": 36
+      }
+    ],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "t:sections.collection_list.blocks.collection.name",
+        "settings": [
+          {
+            "id": "collection",
+            "type": "collection",
+            "label": "t:sections.collection_list.blocks.collection.settings.collection.label"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "t:sections.collection_list.presets.collection_list.name"
+      }
+    ]
+  }
 {% endschema %}
