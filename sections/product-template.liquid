@@ -91,12 +91,15 @@
           <p class="product-single__prices">
             {% if product.compare_at_price_max > product.price %}
               <span id="ComparePriceA11y" class="visually-hidden">{{ 'products.product.sale_price' | t }}</span>
+            <label for="Quantity">{{ 'products.product.quantity' | t }}</label>
             {% else %}
               <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+            <label for="Quantity">{{ 'products.product.quantity' | t }}</label>
             {% endif %}
             <span id="ProductPrice" class="product-single__price" itemprop="price" content="{{ current_variant.price | divided_by: 100.00 }}">
               {{ current_variant.price | money }}
             </span>
+            <label for="Quantity">{{ 'products.product.quantity' | t }}</label>
 
             {% if product.compare_at_price_max > product.price %}
               <span id="PriceA11y" class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
