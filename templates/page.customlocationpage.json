@@ -9,9 +9,11 @@
     },
     "d0ebb24f-7fa0-41be-a0d9-e1c01f1af0d3": {
       "type": "advanced-content",
+      "disabled": true,
       "blocks": {
         "template--15810846032055__d0ebb24f-7fa0-41be-a0d9-e1c01f1af0d3-16798956924a71e5bc-0": {
           "type": "html",
+          "disabled": true,
           "settings": {
             "code": "",
             "width": "100%",
