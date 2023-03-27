@@ -7,6 +7,25 @@
         "content_max_width": 1300
       }
     },
+    "d0ebb24f-7fa0-41be-a0d9-e1c01f1af0d3": {
+      "type": "advanced-content",
+      "blocks": {
+        "template--15810846032055__d0ebb24f-7fa0-41be-a0d9-e1c01f1af0d3-16798956924a71e5bc-0": {
+          "type": "html",
+          "settings": {
+            "code": "",
+            "width": "100%",
+            "alignment": "top-middle"
+          }
+        }
+      },
+      "block_order": [
+        "template--15810846032055__d0ebb24f-7fa0-41be-a0d9-e1c01f1af0d3-16798956924a71e5bc-0"
+      ],
+      "settings": {
+        "title": "Talk about your brand"
+      }
+    },
     "1660642631749ae4f0": {
       "type": "image-hero",
       "disabled": true,
@@ -68,31 +87,12 @@
         "section_margin": "slim",
         "alignment": "center"
       }
-    },
-    "d0ebb24f-7fa0-41be-a0d9-e1c01f1af0d3": {
-      "type": "advanced-content",
-      "blocks": {
-        "template--15810846032055__d0ebb24f-7fa0-41be-a0d9-e1c01f1af0d3-16798956924a71e5bc-0": {
-          "type": "html",
-          "settings": {
-            "code": "<iframe title=\"store-location-app-dev\" src=\"https:\/\/32d7-182-76-6-234.in.ngrok.io\/?embedded=1&amp;hmac=82012a98af0aa2c418c614ca232cece7eeface62ab661b92580e9585a75cd372&amp;host=YWRtaW4uc2hvcGlmeS5jb20vc3RvcmUvbmVwdHVuZS1kZXY&amp;locale=en&amp;session=77f4b95514cfdeb8f4af43bb47581499c8178e0fb5cec765a98f7b95aa5d5dfe&amp;shop=neptune-dev.myshopify.com&amp;timestamp=1679894341\" allow=\"clipboard-write; clipboard-read\" name=\"app-iframe\" store=\"[object Object]\" context=\"Main\" style=\"position: relative; border: none; width: 100%; flex: 1 1 0%; display: flex;\"><\/iframe>",
-            "width": "100%",
-            "alignment": "top-middle"
-          }
-        }
-      },
-      "block_order": [
-        "template--15810846032055__d0ebb24f-7fa0-41be-a0d9-e1c01f1af0d3-16798956924a71e5bc-0"
-      ],
-      "settings": {
-        "title": "Talk about your brand"
-      }
     }
   },
   "order": [
     "main",
+    "d0ebb24f-7fa0-41be-a0d9-e1c01f1af0d3",
     "1660642631749ae4f0",
-    "1660642505b0a541ea",
-    "d0ebb24f-7fa0-41be-a0d9-e1c01f1af0d3"
+    "1660642505b0a541ea"
   ]
 }
