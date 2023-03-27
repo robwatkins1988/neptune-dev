@@ -164,7 +164,7 @@
     "1660917380706b5c54": {
       "type": "custom-liquid",
       "settings": {
-        "custom_liquid": "<iframe title=\"store-location-app-dev\" src=\"https:\/\/ecee-182-76-6-234.in.ngrok.io\/?embedded=1&amp;hmac=148d3c8a432667829d6407e541371e09f6ff9ce46026f3dbb9323caa7583a10c&amp;host=YWRtaW4uc2hvcGlmeS5jb20vc3RvcmUvbmVwdHVuZS1kZXY&amp;locale=en&amp;session=77f4b95514cfdeb8f4af43bb47581499c8178e0fb5cec765a98f7b95aa5d5dfe&amp;shop=neptune-dev.myshopify.com&amp;timestamp=1679913541\" sandbox=\"allow-popups allow-forms allow-scripts allow-same-origin\" allow=\"clipboard-write; clipboard-read\" name=\"app-iframe\" store=\"[object Object]\" context=\"Main\" style=\"position: relative; border: none; width: 100%; flex: 1 1 0%; display: flex;\"><\/iframe>"
+        "custom_liquid": "<iframe title=\"store-location-app-dev\" src=\"https:\/\/ecee-182-76-6-234.in.ngrok.io\/?embedded=1&amp;hmac=148d3c8a432667829d6407e541371e09f6ff9ce46026f3dbb9323caa7583a10c&amp;host=YWRtaW4uc2hvcGlmeS5jb20vc3RvcmUvbmVwdHVuZS1kZXY&amp;locale=en&amp;session=77f4b95514cfdeb8f4af43bb47581499c8178e0fb5cec765a98f7b95aa5d5dfe&amp;shop=neptune-dev.myshopify.com&amp;timestamp=1679913541?igu=1\" sandbox=\"allow-popups allow-forms allow-scripts allow-same-origin\" allow=\"clipboard-write; clipboard-read\" name=\"app-iframe\" store=\"[object Object]\" context=\"Main\" style=\"position: relative; border: none; width: 100%; flex: 1 1 0%; display: flex;\"><\/iframe>"
       }
     }
   },
