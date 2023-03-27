@@ -158,35 +158,30 @@
         "blocks": {
           "1602015986783": {
             "type": "link_list",
-            "disabled": true,
             "settings": {
               "menu": "footer"
             }
           },
           "408f5d08-aa15-43e9-b53c-3084025afa57": {
             "type": "link_list",
-            "disabled": true,
             "settings": {
               "menu": ""
             }
           },
           "2d76463c-bc19-4f06-8d63-696bd9bee58a": {
             "type": "link_list",
-            "disabled": true,
             "settings": {
               "menu": ""
             }
           },
           "3f344cc8-1bc0-425e-a164-0ce722c96b62": {
             "type": "link_list",
-            "disabled": true,
             "settings": {
               "menu": ""
             }
           },
           "1ff363f7-ecd8-4b91-9c16-e4f14dd0c20a": {
             "type": "link_list",
-            "disabled": true,
             "settings": {
               "menu": ""
             }
@@ -211,7 +206,6 @@
         "blocks": {
           "popup-0": {
             "type": "heading",
-            "disabled": true,
             "settings": {
               "exit_intent_heading": "Subscribe",
               "exit_intent_subheading": "<p>We only send emails once or twice a month and only about good things.<\/p>"
@@ -219,7 +213,6 @@
           },
           "popup-1": {
             "type": "newsletter_signup",
-            "disabled": true,
             "settings": {
             }
           }
