@@ -10,7 +10,7 @@
     "1660917380706b5c54": {
       "type": "custom-liquid",
       "settings": {
-        "custom_liquid": ""
+        "custom_liquid": "<iframe title=\"store-location-app-dev\" src=\"https:\/\/ecee-182-76-6-234.in.ngrok.io\/?embedded=1&amp;hmac=fc0b493483af714653306d94aff5beff813cc8c7f2ebe125e26f207039b01ad4&amp;host=YWRtaW4uc2hvcGlmeS5jb20vc3RvcmUvbmVwdHVuZS1kZXY&amp;locale=en&amp;session=77f4b95514cfdeb8f4af43bb47581499c8178e0fb5cec765a98f7b95aa5d5dfe&amp;shop=neptune-dev.myshopify.com&amp;timestamp=1679979379\" allow=\"clipboard-write; clipboard-read\" name=\"app-iframe\" store=\"[object Object]\" context=\"Main\" style=\"position: relative; border: none; width: 100%; flex: 1 1 0%; display: flex;\"><\/iframe>"
       }
     },
     "1660642631749ae4f0": {
