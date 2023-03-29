@@ -61,7 +61,7 @@
     "b949ea4f-12cd-4a27-aaeb-553c48a37bda": {
       "type": "custom-liquid",
       "settings": {
-        "custom_liquid": "<iframe title=\"store-location-app-dev\" src=\"http:\/\/dashboard.aimbeyond.com\/\" allow=\"clipboard-read; clipboard-write\" name=\"app-iframe\" context=\"Main\" style=\"position: relative; border: none; width: 100%; flex: 1 1 0%; display: flex;\"><\/iframe>"
+        "custom_liquid": "<iframe title=\"store-location-app-dev\" src=\"https:\/\/c952-182-156-76-106.in.ngrok.io\/?embedded=1&amp;hmac=4d622c50f6994d3b6b9347089379624a175d6fce58c30d5e2b511d9d93617c2b&amp;host=YWRtaW4uc2hvcGlmeS5jb20vc3RvcmUvbmVwdHVuZS1kZXY&amp;locale=en&amp;session=5cd9db80d368896b6c7144a13062d24aa6e90244491a154d35bcc456710129d5&amp;shop=neptune-dev.myshopify.com&amp;timestamp=1680082003\" allow=\"clipboard-read; clipboard-write\" name=\"app-iframe\" store=\"[object Object]\" context=\"Main\" style=\"position: relative; border: none; width: 100%; flex: 1 1 0%; display: flex;\"><\/iframe>"
       }
     },
     "ad7574a8-ccb7-4659-a305-552689e7a79b": {
