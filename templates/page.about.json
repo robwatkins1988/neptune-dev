@@ -61,7 +61,7 @@
     "b949ea4f-12cd-4a27-aaeb-553c48a37bda": {
       "type": "custom-liquid",
       "settings": {
-        "custom_liquid": "<iframe title=\"store-location-app-dev\" src=\"https:\/\/www.neptune.com\/our-stores\/\" allow=\"clipboard-read; clipboard-write\" name=\"app-iframe\" context=\"Main\" style=\"position: relative; border: none; width: 100%; flex: 1 1 0%; display: flex;\"><\/iframe>"
+        "custom_liquid": "<iframe title=\"store-location-app-dev\" src=\"http:\/\/dashboard.aimbeyond.com\/\" allow=\"clipboard-read; clipboard-write\" name=\"app-iframe\" context=\"Main\" style=\"position: relative; border: none; width: 100%; flex: 1 1 0%; display: flex;\"><\/iframe>"
       }
     },
     "ad7574a8-ccb7-4659-a305-552689e7a79b": {
